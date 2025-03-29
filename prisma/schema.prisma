@@ -1,0 +1,9 @@
+// This is your Prisma schema file
+generator client { provider = "prisma-client-js" }
+datasource db { provider = "mysql" url = env("DATABASE_URL") }
+
+model SiteSettings {
+  id        Int      @id @default(1)
+  phone     String   @default("+7 (900) 000-00-00")
+  updatedAt DateTime @default(now()) @updatedAt
+}
