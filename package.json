@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "prisma:generate": "npx prisma generate"
+    "postinstall": "npx prisma generate"
   },
   "eslintConfig": {
     "extends": "next/core-web-vitals",
