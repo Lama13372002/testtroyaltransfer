@@ -1,18 +1,17 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { Dialog, DialogContent, DialogTrigger, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Clock, ArrowRight, X, ArrowLeft } from 'lucide-react'
-import { blogPosts } from '@/lib/blog-data'
+import { getBlogPosts, type BlogPost } from '@/lib/blog-service'
 
-// Force static generation
-export const dynamic = 'force-static'
-
-function BlogPost({ post }: { post: typeof blogPosts[0] }) {
+// Функциональный компонент для отдельного поста блога
+function BlogPostCard({ post }: { post: BlogPost }) {
   const [isOpen, setIsOpen] = useState(false)
+  const formattedDate = new Date(post.publishedAt).toLocaleDateString('ru-RU')
 
   return (
     <div className="flex flex-col h-full">
@@ -65,7 +64,7 @@ function BlogPost({ post }: { post: typeof blogPosts[0] }) {
                     <Clock className="w-4 h-4 mr-1" />
                     <span className="text-sm">{post.readTime}</span>
                   </div>
-                  <div className="text-sm">{new Date(post.publishedAt).toLocaleDateString('ru-RU')}</div>
+                  <div className="text-sm">{formattedDate}</div>
                 </div>
               </div>
 
@@ -94,6 +93,27 @@ function BlogPost({ post }: { post: typeof blogPosts[0] }) {
 }
 
 export default function BlogPage() {
+  const [posts, setPosts] = useState<BlogPost[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    async function loadPosts() {
+      try {
+        setLoading(true)
+        const data = await getBlogPosts()
+        setPosts(data)
+      } catch (err) {
+        console.error('Ошибка при загрузке постов:', err)
+        setError('Не удалось загрузить статьи блога')
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    loadPosts()
+  }, [])
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto px-4 py-20">
@@ -107,11 +127,25 @@ export default function BlogPage() {
           <h1 className="text-3xl md:text-4xl font-bold">Блог о путешествиях</h1>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post) => (
-            <BlogPost key={post.id} post={post} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[300px]">
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+          </div>
+        ) : error ? (
+          <div className="text-center p-10 text-red-500">
+            <p>{error}</p>
+          </div>
+        ) : posts.length === 0 ? (
+          <div className="text-center p-10 text-gray-500">
+            <p>Пока нет опубликованных статей</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {posts.map((post) => (
+              <BlogPostCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )
