@@ -23,3 +23,18 @@ model SiteSettings {
   whatsappLink   String   @default("#")
   updatedAt      DateTime @default(now()) @updatedAt
 }
+
+model BlogPost {
+  id           Int      @id @default(autoincrement())
+  title        String
+  slug         String   @unique
+  content      String   @db.LongText
+  excerpt      String   @db.Text
+  image        String?
+  fallbackImage String
+  publishedAt  DateTime @default(now())
+  readTime     String   @default("5 мин")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @default(now()) @updatedAt
+  isPublished  Boolean  @default(true)
+}
