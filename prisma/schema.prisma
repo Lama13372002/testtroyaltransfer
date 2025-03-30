@@ -1,4 +1,5 @@
-// This is your Prisma schema file
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
   provider = "prisma-client-js"
@@ -10,7 +11,15 @@ datasource db {
 }
 
 model SiteSettings {
-  id        Int      @id @default(1)
-  phone     String   @default("+7 (900) 000-00-00")
-  updatedAt DateTime @default(now()) @updatedAt
+  id             Int      @id @default(1)
+  phone          String   @default("+7 (900) 000-00-00")
+  email          String   @default("info@royaltransfer.ru")
+  address        String   @default("г. Калининград, ул. Примерная, д. 123")
+  workingHours   String   @default("Пн-Вс: 24/7")
+  companyName    String   @default("RoyalTransfer")
+  companyDesc    String   @default("Комфортные трансферы из Калининграда в города Европы. Безопасность, комфорт и пунктуальность.")
+  instagramLink  String   @default("#")
+  telegramLink   String   @default("#")
+  whatsappLink   String   @default("#")
+  updatedAt      DateTime @default(now()) @updatedAt
 }
