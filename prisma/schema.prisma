@@ -30,7 +30,7 @@ model BlogPost {
   slug         String   @unique
   content      String   @db.LongText
   excerpt      String   @db.Text
-  imageUrl String? @map("imageUrl")  // Синхронизируем с существующей БД
+  imageUrl String @map("imageUrl") @default("")  // Если в БД NULL запрещён
   fallbackImage String @default("") // Соответствует NOT NULL в SQL
   publishedAt  DateTime @default(now())
   readTime     String   @default("5 мин")
