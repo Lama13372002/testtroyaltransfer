@@ -4,47 +4,58 @@ import slugify from 'slugify'
 
 const prisma = new PrismaClient()
 
-// Получение всех блог-постов
+// Получение всех блог-постов (ВЕРСИЯ С ЛОГАМИ)
 export async function GET(request: Request) {
   const url = new URL(request.url)
   const id = url.searchParams.get('id')
   const slug = url.searchParams.get('slug')
 
   try {
+    console.log('Получение данных блога...')
+    
     // Если указан id или slug, возвращаем конкретный пост
     if (id) {
+      console.log(`Запрос поста с id: ${id}`)
       const post = await prisma.blogPost.findUnique({
         where: { id: parseInt(id) }
       })
-
+      
       if (!post) {
+        console.log(`Пост с id ${id} не найден`)
         return NextResponse.json({ error: 'Пост не найден' }, { status: 404 })
       }
-
+      
       return NextResponse.json({ post })
-    }
-
+    } 
+    
     if (slug) {
+      console.log(`Запрос поста с slug: ${slug}`)
       const post = await prisma.blogPost.findUnique({
         where: { slug }
       })
-
+      
       if (!post) {
+        console.log(`Пост с slug ${slug} не найден`)
         return NextResponse.json({ error: 'Пост не найден' }, { status: 404 })
       }
-
+      
       return NextResponse.json({ post })
     }
 
     // Иначе возвращаем все посты
+    console.log('Запрос всех постов')
     const posts = await prisma.blogPost.findMany({
       orderBy: { publishedAt: 'desc' }
     })
-
+    
+    console.log(`Найдено постов: ${posts.length}`)
     return NextResponse.json({ posts })
   } catch (error) {
     console.error('Error fetching blog posts:', error)
-    return NextResponse.json({ error: 'Не удалось получить данные блога' }, { status: 500 })
+    return NextResponse.json(
+      { error: 'Не удалось получить данные блога', details: error.message }, 
+      { status: 500 }
+    )
   }
 }
 
