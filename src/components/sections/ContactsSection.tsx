@@ -7,8 +7,10 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from 'sonner'
 import { MapPin, Phone, Mail, Clock, Send } from 'lucide-react'
+import { useSettings } from '@/lib/settings-context'
 
 export default function ContactsSection() {
+  const { settings } = useSettings()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -79,7 +81,7 @@ export default function ContactsSection() {
                 <div>
                   <h4 className="font-semibold text-gray-900 dark:text-white">Адрес</h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    г. Калининград, ул. Примерная, д. 123
+                    {settings.address}
                   </p>
                 </div>
               </div>
@@ -91,8 +93,8 @@ export default function ContactsSection() {
                 <div>
                   <h4 className="font-semibold text-gray-900 dark:text-white">Телефон</h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    <a href="tel:+79000000000" className="hover:text-primary transition-colors">
-                      +7 (900) 000-00-00
+                    <a href={`tel:${settings.phone.replace(/[\s()-]/g, '')}`} className="hover:text-primary transition-colors">
+                      {settings.phone}
                     </a>
                   </p>
                 </div>
@@ -105,8 +107,8 @@ export default function ContactsSection() {
                 <div>
                   <h4 className="font-semibold text-gray-900 dark:text-white">Email</h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    <a href="mailto:info@rostransfer.ru" className="hover:text-primary transition-colors">
-                      info@rostransfer.ru
+                    <a href={`mailto:${settings.email}`} className="hover:text-primary transition-colors">
+                      {settings.email}
                     </a>
                   </p>
                 </div>
@@ -119,7 +121,7 @@ export default function ContactsSection() {
                 <div>
                   <h4 className="font-semibold text-gray-900 dark:text-white">Режим работы</h4>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Пн-Вс: 24/7<br />
+                    {settings.workingHours}<br />
                     Работаем без выходных
                   </p>
                 </div>
