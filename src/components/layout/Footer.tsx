@@ -7,8 +7,8 @@ import { useSettings } from '@/lib/settings-context'
 
 export default function Footer() {
   const currentYear = new Date().getFullYear()
-  const { phone } = useSettings()
-
+  const { settings } = useSettings()
+  
   return (
     <footer className="bg-gray-900 text-white pt-16 pb-8">
       <div className="container mx-auto px-4">
@@ -19,32 +19,38 @@ export default function Footer() {
               <MapPin className="w-6 h-6 mr-2 text-primary" />
               <h3 className="text-xl font-bold">
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-600">
-                  Royal<span className="text-primary">Transfer</span>
+                  {settings.companyName}
                 </span>
               </h3>
             </div>
             <p className="text-gray-400 mb-4">
-              Комфортные трансферы из Калининграда в города Европы. Безопасность, комфорт и пунктуальность.
+              {settings.companyDesc}
             </p>
             <div className="flex space-x-4 mt-6">
               <a
-                href="#"
+                href={settings.instagramLink}
                 className="bg-pink-600 hover:bg-pink-700 p-2 rounded-full transition-colors"
                 aria-label="Instagram"
+                target="_blank" 
+                rel="noopener noreferrer"
               >
                 <FaInstagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href={settings.telegramLink}
                 className="bg-blue-500 hover:bg-blue-600 p-2 rounded-full transition-colors"
                 aria-label="Telegram"
+                target="_blank" 
+                rel="noopener noreferrer"
               >
                 <FaTelegram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href={settings.whatsappLink}
                 className="bg-green-500 hover:bg-green-600 p-2 rounded-full transition-colors"
                 aria-label="WhatsApp"
+                target="_blank" 
+                rel="noopener noreferrer"
               >
                 <FaWhatsapp className="w-5 h-5" />
               </a>
@@ -122,23 +128,29 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin className="w-5 h-5 text-primary mr-3 mt-0.5" />
-                <span className="text-gray-400">г. Калининград, ул. Примерная, д. 123</span>
+                <span className="text-gray-400">{settings.address}</span>
               </li>
               <li className="flex items-center">
                 <Phone className="w-5 h-5 text-primary mr-3" />
-                <a href={`tel:${phone.replace(/\s+/g, '')}`} className="text-gray-400 hover:text-primary transition-colors">
-                  {phone}
+                <a 
+                  href={`tel:${settings.phone.replace(/\s+/g, '')}`} 
+                  className="text-gray-400 hover:text-primary transition-colors"
+                >
+                  {settings.phone}
                 </a>
               </li>
               <li className="flex items-center">
                 <Mail className="w-5 h-5 text-primary mr-3" />
-                <a href="mailto:info@royaltransfer.ru" className="text-gray-400 hover:text-primary transition-colors">
-                  info@royaltransfer.ru
+                <a 
+                  href={`mailto:${settings.email}`} 
+                  className="text-gray-400 hover:text-primary transition-colors"
+                >
+                  {settings.email}
                 </a>
               </li>
               <li className="flex items-start">
                 <Clock className="w-5 h-5 text-primary mr-3 mt-0.5" />
-                <span className="text-gray-400">Пн-Вс: 24/7<br />Работаем без выходных</span>
+                <span className="text-gray-400">{settings.workingHours}<br />Работаем без выходных</span>
               </li>
             </ul>
           </div>
@@ -146,7 +158,7 @@ export default function Footer() {
 
         <div className="border-t border-gray-800 mt-12 pt-8 text-center">
           <p className="text-gray-500 text-sm">
-            © {currentYear} RoyalTransfer. Все права защищены.
+            © {currentYear} {settings.companyName}. Все права защищены.
           </p>
         </div>
       </div>
