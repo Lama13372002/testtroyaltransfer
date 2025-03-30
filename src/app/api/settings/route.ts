@@ -13,7 +13,18 @@ export async function GET() {
     // Если настроек нет, создаем со значениями по умолчанию
     if (!settings) {
       settings = await prisma.siteSettings.create({
-        data: { id: 1, phone: "+7 (900) 000-00-00" }
+        data: { 
+          id: 1, 
+          phone: "+7 (900) 000-00-00",
+          email: "info@royaltransfer.ru",
+          address: "г. Калининград, ул. Примерная, д. 123",
+          workingHours: "Пн-Вс: 24/7",
+          companyName: "RoyalTransfer",
+          companyDesc: "Комфортные трансферы из Калининграда в города Европы. Безопасность, комфорт и пунктуальность.",
+          instagramLink: "#",
+          telegramLink: "#",
+          whatsappLink: "#"
+        }
       })
     }
 
@@ -28,10 +39,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { phone } = body
-
-    if (!phone) {
-      return NextResponse.json({ error: 'Телефон обязателен' }, { status: 400 })
+    
+    // Проверка на наличие хотя бы одного поля для обновления
+    if (Object.keys(body).length === 0) {
+      return NextResponse.json({ error: 'Необходимо указать хотя бы одно поле для обновления' }, { status: 400 })
     }
 
     // Проверяем, существуют ли настройки
@@ -43,12 +54,25 @@ export async function POST(request: Request) {
       // Обновляем существующие настройки
       settings = await prisma.siteSettings.update({
         where: { id: 1 },
-        data: { phone }
+        data: body
       })
     } else {
-      // Создаем новые настройки
+      // Создаем новые настройки с объединением значений по умолчанию и переданных настроек
+      const defaultSettings = {
+        id: 1, 
+        phone: "+7 (900) 000-00-00",
+        email: "info@royaltransfer.ru",
+        address: "г. Калининград, ул. Примерная, д. 123",
+        workingHours: "Пн-Вс: 24/7",
+        companyName: "RoyalTransfer",
+        companyDesc: "Комфортные трансферы из Калининграда в города Европы. Безопасность, комфорт и пунктуальность.",
+        instagramLink: "#",
+        telegramLink: "#",
+        whatsappLink: "#"
+      }
+
       settings = await prisma.siteSettings.create({
-        data: { id: 1, phone }
+        data: { ...defaultSettings, ...body }
       })
     }
 
